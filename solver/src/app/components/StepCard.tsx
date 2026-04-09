@@ -84,32 +84,53 @@ export const StepCard: React.FC<StepCardProps> = ({ step, onToggleUnderstood, in
             {(step.notes || step.videoUrl) && (
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch">
                 {step.notes && (
-                  <div className="flex items-center gap-3 h-full bg-neutral-800/40 border border-neutral-800/60 rounded-xl p-4 transition-colors hover:bg-neutral-800/60">
-                    <FileText size={20} className="text-cyan-400 shrink-0" />
+                  <div className="flex items-center gap-3 h-full bg-neutral-800/40 border border-neutral-800/60 rounded-xl p-4 transition-colors hover:border-neutral-700 min-h-[5rem]">
+                    <FileText size={24} className="text-cyan-400 shrink-0" />
                     <div className="min-w-0 flex-1">
                       <span className="block text-xs font-semibold uppercase tracking-wider text-cyan-400/80 mb-1">Notes</span>
-                      <p className="text-sm text-neutral-400 leading-snug whitespace-pre-wrap"><Latex>{step.notes}</Latex></p>
+                      <p className="text-sm text-neutral-300 font-medium leading-snug whitespace-pre-wrap"><Latex>{step.notes}</Latex></p>
                     </div>
                   </div>
                 )}
                 
-                {step.videoUrl && (
-                  <a 
-                    href={step.videoUrl} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="flex items-center gap-3 h-full bg-neutral-800/40 border border-neutral-800/60 rounded-xl p-4 group transition-all hover:bg-neutral-800/60 hover:border-neutral-700"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <PlayCircle size={20} className="text-cyan-400 shrink-0 group-hover:text-cyan-300 transition-colors" />
-                    <div className="min-w-0 flex-1">
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-cyan-400/80 mb-1">Video Guide</span>
-                      <p className="text-sm text-neutral-400 leading-snug break-all truncate">
-                        Watch explanation
-                      </p>
-                    </div>
-                  </a>
-                )}
+                {step.videoUrl && (() => {
+                  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                  const match = step.videoUrl.match(regExp);
+                  const videoId = (match && match[2].length === 11) ? match[2] : null;
+                  const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : undefined;
+
+                  return (
+                    <a 
+                      href={step.videoUrl} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="relative overflow-hidden flex items-center gap-3 h-full border border-neutral-800/60 rounded-xl p-4 group transition-all hover:border-neutral-600 min-h-[5rem]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {thumbnailUrl ? (
+                        <>
+                          <div 
+                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 opacity-40 mix-blend-luminosity"
+                            style={{ backgroundImage: `url(${thumbnailUrl})` }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/80 to-neutral-900/30" />
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 bg-neutral-800/40 group-hover:bg-neutral-800/60 transition-colors" />
+                      )}
+
+                      <div className="relative z-10 flex items-center gap-3 w-full">
+                        <PlayCircle size={24} className="text-cyan-400 shrink-0 group-hover:text-cyan-300 transition-colors drop-shadow-md" />
+                        <div className="min-w-0 flex-1">
+                          <span className="block text-xs font-semibold uppercase tracking-wider text-cyan-300/90 mb-1 drop-shadow-md">Video Guide</span>
+                          <p className="text-sm text-neutral-200 font-medium leading-snug truncate drop-shadow-md">
+                            Watch explanation
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })()}
               </div>
             )}
           </div>
