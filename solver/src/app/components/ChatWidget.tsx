@@ -66,7 +66,7 @@ export const ChatWidget: React.FC = () => {
               <Bot size={20} />
             </div>
             <div>
-              <h3 className="font-semibold text-neutral-200">AI Tutor</h3>
+              <h3 className="font-semibold text-neutral-200">Cha</h3>
               <p className="text-xs text-cyan-400">Online</p>
             </div>
           </div>
